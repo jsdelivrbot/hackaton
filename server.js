@@ -2,7 +2,9 @@ const express = require("express"),
       app = express(),
       bodyParser  = require("body-parser"),
       methodOverride = require("method-override"),
-      pg = require('pg');
+      pg = require('pg'),
+      path    = require("path"),
+      fs = require('fs');
 
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/hackaton';
 const client = new pg.Client(connectionString);
@@ -13,6 +15,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 
+
+app.set('view engine', 'html');
+app.use('/css', express.static('css'));
+app.use('/js', express.static('js'));
+app.use('/img', express.static('img'));
 var router = express.Router();
 
 router.get('/usuariosUbicados', function(req, resp) {
@@ -34,7 +41,17 @@ router.get('/usuarioUbicado/:email', function(req, resp) {
 });
 
 router.get('/', function(req, resp) {
-  resp.send("Hello World!");
+  fs.readFile('./index.html', function read(err, data) {
+    if (err) {
+        throw err;
+    }
+    content = data;
+      resp.writeHead(200, { 'Content-Type': 'text/html' });
+resp.end(data);
+    // Invoke the next step here however you like
+    console.log(content);   // Put all of the code here (not the best solution)         // Or put the next step in a function and invoke it
+});
+  //resp.render('./index.html');
 });
 
 
