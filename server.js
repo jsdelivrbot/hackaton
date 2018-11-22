@@ -18,11 +18,18 @@ var router = express.Router();
 router.get('/usuariosUbicados', function(req, resp) {
   client.query('select u.*, r.ubicacion from users as u left join router as r on(r.id = u.fk_router);', (err, res) => {
     if (err) throw err;
-    //let rows
 
-    console.log(JSON.stringify(res.rows));
+//  console.log(JSON.stringify(res.rows));
     resp.send(res.rows);
-    //client.end();
+  });
+});
+
+router.get('/usuarioUbicado/:email', function(req, resp) {
+  client.query('select u.*, r.ubicacion from users as u inner join router as r on(r.id = u.fk_router and u.email=$1);', [req.params.email], (err, res) => {
+    if (err) throw err;
+
+  //  console.log(JSON.stringify(res.rows));
+    resp.send(res.rows);
   });
 });
 
@@ -34,30 +41,45 @@ router.get('/', function(req, resp) {
 router.get('/login/:email/:password', function(req, resp) {
   client.query('select * from users where email=$1 and password=$2', [req.params.email, req.params.password], (err, res) => {
     if (err) throw err;
-    //let rows
-    console.log(JSON.stringify(res.rows));
+
+  //  console.log(JSON.stringify(res.rows));
     resp.send(res.rows);
-    //client.end();
   });
 });
 
 router.get('/user/:name', function(req, resp) {
-  console.log(req.params.name);
   client.query("select * from users where name like $1;", [req.params.name], (err, res) => {
     if (err) throw err;
-    //let rows
-    console.log(JSON.stringify(res.rows));
+
+  //  console.log(JSON.stringify(res.rows));
     resp.send(res.rows);
-    //client.end();
   });
 });
 
 router.put('/user/:ssid/:email', function(req, resp) {
-  resp.send("llego esto " + req.params.ssid + " ----- " + req.params.email);
+  client.query("update users set fk_router = (select id from router where ssid = $1) where email = $2;", [req.params.ssid, req.params.email], (err, res) => {
+    if (err)  throw  resp.send(err);
+
+  //  console.log(JSON.stringify(res.rows));
+    resp.send("usuario actualizado con exito");
+  });
 });
 
-router.put('/userDisconected/:email', function(req, res) {
+router.put('/userDisconected/:email', function(req, resp) {
+  client.query("update users set fk_router = (select id from router where ssid = '') where email = $1;", [req.params.email], (err, res) => {
+    if (err)  throw  resp.send(err);
 
+    resp.send("usuario actualizado con exito");
+  });
+});
+
+router.post('/user', function(req, resp) {
+  client.query("insert into users (name, email, password) values($1, $2, $3);", [req.param('name'), req.param('email'), req.param('password')], (err, res) => {
+    if (err)  throw  resp.send(err);
+
+  //  console.log(JSON.stringify(res.rows));
+    resp.send("usuario agregado con exito");
+  });
 });
 
 app.use(router);
