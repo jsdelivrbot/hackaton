@@ -52,8 +52,8 @@ router.get('/user/:name', function(req, resp) {
   });
 });
 
-router.put('/user/:ssid/:email', function(req, res) {
-
+router.put('/user/:ssid/:email', function(req, resp) {
+  resp.send("llego esto " + req.params.ssid + " ----- " + req.params.email);
 });
 
 router.put('/userDisconected/:email', function(req, res) {
