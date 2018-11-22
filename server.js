@@ -16,12 +16,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 
-
+app.use(cors());
 app.set('view engine', 'html');
 app.use('/css', express.static('css'));
 app.use('/js', express.static('js'));
 app.use('/img', express.static('img'));
-app.use(cors());
+
 var router = express.Router();
 
 router.get('/usuariosUbicados', function(req, resp) {
@@ -43,7 +43,6 @@ router.get('/usuarioUbicado/:email', function(req, resp) {
 });
 
 router.get('/', function(req, resp) {
-  console.log(express.use())
   fs.readFile('./index.html', function read(err, data) {
     if (err) {
         throw err;
