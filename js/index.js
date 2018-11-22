@@ -18,18 +18,20 @@ $('.search-form').submit(function (event) {
         '1b.png',
         '2a.png',
         '3a.png',
-        '3b.png'
+        '3b.png',
+        '3a.png'
     ];
     var mapDescriptions = [
         'se encuentra en el 4to piso',
         'se encuentra en el 4to piso',
-        'se encuentra en la sala Gokú (3er piso)',
+        'se encuentra en la sala Goku (3er piso)',
         'se encuentra en el 3er piso',
         'se encuentra en el 3er piso',
+        'se encuentra en la sala Goku (3er piso)'
     ];
 
     var accessPoint = $('#myInputData').val();
-    
+
     if (!accessPoint || accessPoint === '') {
         $('.map-description').html('No se ha encontrado');
         $('.map-img').attr('src', '')
@@ -105,7 +107,7 @@ function autocomplete(inp, arr) {
         $('.clear-search-btn').hide();
         $('.map-container').hide();
     });
-    
+
     function closeAllLists(elmnt) {
         /*close all autocomplete lists in the document,
         except the one passed as an argument:*/
@@ -123,9 +125,9 @@ function autocomplete(inp, arr) {
 }
 
 var employees = [
-    { nombre: "Fabio Sarcansky", email: "usuario@virtualmind.io" },
-    { nombre: "Sebasti\u00E1n Pucheta", email: "usuario1@virtualmind.io" },
-    { nombre: "Micaela Raiter", email: "usuario2@virtualmind.io" },
+    { nombre: "Fabio Sarcansky", email: "usuario2@virtualmind.io" },
+    { nombre: "Sebasti\u00E1n Pucheta", email: "usuario@virtualmind.io" },
+    { nombre: "Micaela Raiter", email: "usuario@virtualmind.io" },
     { nombre: "Jean Pierre Sosa", email: "usuario3@virtualmind.io" },
     { nombre: "Ezequiel Falabella", email: "usuario4@virtualmind.io" },
     { nombre: "Gustavo Serrano", email: "usuario5@virtualmind.io" }
