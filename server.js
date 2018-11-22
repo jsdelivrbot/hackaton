@@ -49,7 +49,7 @@ router.get('/', function(req, resp) {
       resp.writeHead(200, { 'Content-Type': 'text/html' });
 resp.end(data);
     // Invoke the next step here however you like
-    console.log(content);   // Put all of the code here (not the best solution)         // Or put the next step in a function and invoke it
+//    console.log(content);   // Put all of the code here (not the best solution)         // Or put the next step in a function and invoke it
 });
   //resp.render('./index.html');
 });
