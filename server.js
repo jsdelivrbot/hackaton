@@ -4,7 +4,8 @@ const express = require("express"),
       methodOverride = require("method-override"),
       pg = require('pg'),
       path    = require("path"),
-      fs = require('fs');
+      fs = require('fs'),
+      cors = require('cors');
 
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/hackaton';
 const client = new pg.Client(connectionString);
@@ -20,6 +21,7 @@ app.set('view engine', 'html');
 app.use('/css', express.static('css'));
 app.use('/js', express.static('js'));
 app.use('/img', express.static('img'));
+app.use(cors());
 var router = express.Router();
 
 router.get('/usuariosUbicados', function(req, resp) {
@@ -41,6 +43,7 @@ router.get('/usuarioUbicado/:email', function(req, resp) {
 });
 
 router.get('/', function(req, resp) {
+  console.log(express.use())
   fs.readFile('./index.html', function read(err, data) {
     if (err) {
         throw err;
