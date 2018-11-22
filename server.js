@@ -37,7 +37,7 @@ client.query('select u.*, r.ubicacion from users as u left join router as r on(r
   //let rows
   /*
   for (let row of res.rows) {
-    console.log(JSON.stringify(res.row));
+    console.log(JSON.stringify(res.row)); 
   }*/
   console.log(JSON.stringify(res.rows));
   resp.send(res.rows);
