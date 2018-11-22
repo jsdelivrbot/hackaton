@@ -10,7 +10,6 @@ $('.btn-exit').click(function (event) {
     $('.login-page').show();
 });
 
-var mapIndex = 0;
 $('.search-form').submit(function (event) {
     event.preventDefault();
 
@@ -22,22 +21,26 @@ $('.search-form').submit(function (event) {
         '3b.png'
     ];
     var mapDescriptions = [
-        'se encuentra en la cocina',
-        'ha estado hace 1 hora en la sala Hulk (3er piso)',
-        'se encuentra en la sala Wolverine (2do piso)',
-        'ha estado hace 15 minutos en la sala Relax (2do piso)',
-        'se encuentra en el ba\u00F1o (3er piso)',
+        'se encuentra en el 4to piso',
+        'se encuentra en el 4to piso',
+        'se encuentra en la sala Gokú (3er piso)',
+        'se encuentra en el 3er piso',
+        'se encuentra en el 3er piso',
     ];
 
-    if (mapIndex === maps.length) {
-        mapIndex = 0;
+    var accessPoint = $('#myInputData').val();
+    
+    if (!accessPoint || accessPoint === '') {
+        $('.map-description').html('No se ha encontrado');
+        $('.map-img').attr('src', '')
+        $('.map-container').show();
+        return;
     }
-    mapIndex++;
 
-    var mapDescription = '<strong>' + $('#myInput').val() + '</strong> ' + mapDescriptions[mapIndex - 1];
+    var mapDescription = '<strong>' + $('#myInput').val() + '</strong> ' + mapDescriptions[accessPoint - 1];
     $('.map-description').html(mapDescription);
 
-    $('.map-img').attr('src', 'img/maps/' + maps[mapIndex - 1])
+    $('.map-img').attr('src', 'img/maps/' + maps[accessPoint - 1])
     $('.map-container').show();
 });
 
@@ -63,27 +66,33 @@ function autocomplete(inp, arr) {
         a.setAttribute("class", "autocomplete-items list-group");
         /*append the DIV element as a child of the autocomplete container:*/
         this.parentNode.appendChild(a);
-        /*for each item in the array...*/
+
+
         for (i = 0; i < arr.length; i++) {
             /*check if the item starts with the same letters as the text field value:*/
-            if (arr[i].toLowerCase().indexOf(val.toLowerCase()) >= 0) {
+            if (arr[i].nombre.toLowerCase().indexOf(val.toLowerCase()) >= 0) {
                 /*create a DIV element for each matching element:*/
                 b = document.createElement("LI");
                 b.setAttribute("class", "list-group-item");
                 /*make the matching letters bold:*/
-                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                b.innerHTML += arr[i].substr(val.length);
+                b.innerHTML = "<strong>" + arr[i].nombre.substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].nombre.substr(val.length);
                 /*insert a input field that will hold the current array item's value:*/
-                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                b.innerHTML += "<input type='hidden' email='" + arr[i].email + "' value='" + arr[i].nombre + "'>";
                 /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function (e) {
                     /*insert the value for the autocomplete text field:*/
                     inp.value = this.getElementsByTagName("input")[0].value;
+                    var email = this.getElementsByTagName("input")[0].getAttribute('email');
                     /*close the list of autocompleted values,
                     (or any other open lists of autocompleted values:*/
                     closeAllLists();
                     $('.search-btn').removeAttr('disabled');
                     $('.clear-search-btn').show();
+
+                    getUserLocation(email, function (accessPoint) {
+                        $('#myInputData').val(accessPoint);
+                    });
                 });
                 a.appendChild(b);
             }
@@ -92,51 +101,11 @@ function autocomplete(inp, arr) {
     });
     $('.clear-search-btn').click(function (event) {
         $('#myInput').val('');
-        $('.search-btn').attr('disabled','disabled');
+        $('.search-btn').attr('disabled', 'disabled');
         $('.clear-search-btn').hide();
         $('.map-container').hide();
     });
-    ///*execute a function presses a key on the keyboard:*/
-    //inp.addEventListener("keydown", function (e) {
-    //    var x = document.getElementById(this.id + "autocomplete-list");
-    //    if (x) x = x.getElementsByTagName("div");
-    //    if (e.keyCode == 40) {
-    //        /*If the arrow DOWN key is pressed,
-    //        increase the currentFocus variable:*/
-    //        currentFocus++;
-    //        /*and and make the current item more visible:*/
-    //        addActive(x);
-    //    } else if (e.keyCode == 38) { //up
-    //        /*If the arrow UP key is pressed,
-    //        decrease the currentFocus variable:*/
-    //        currentFocus--;
-    //        /*and and make the current item more visible:*/
-    //        addActive(x);
-    //    } else if (e.keyCode == 13) {
-    //        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-    //        e.preventDefault();
-    //        if (currentFocus > -1) {
-    //            /*and simulate a click on the "active" item:*/
-    //            if (x) x[currentFocus].click();
-    //        }
-    //    }
-    //});
-    //function addActive(x) {
-    //    /*a function to classify an item as "active":*/
-    //    if (!x) return false;
-    //    /*start by removing the "active" class on all items:*/
-    //    removeActive(x);
-    //    if (currentFocus >= x.length) currentFocus = 0;
-    //    if (currentFocus < 0) currentFocus = (x.length - 1);
-    //    /*add class "autocomplete-active":*/
-    //    x[currentFocus].classList.add("autocomplete-active");
-    //}
-    //function removeActive(x) {
-    //    /*a function to remove the "active" class from all autocomplete items:*/
-    //    for (var i = 0; i < x.length; i++) {
-    //        x[i].classList.remove("autocomplete-active");
-    //    }
-    //}
+    
     function closeAllLists(elmnt) {
         /*close all autocomplete lists in the document,
         except the one passed as an argument:*/
@@ -153,6 +122,29 @@ function autocomplete(inp, arr) {
     });
 }
 
-var employees = ["Fabio Sarcansky", "Sebasti\u00E1n Pucheta", "Micaela Ritaer", "Jean Pierre Sosa", "Ezequiel Falabella", "Gustavo Serrano"];
+var employees = [
+    { nombre: "Fabio Sarcansky", email: "usuario@virtualmind.io" },
+    { nombre: "Sebasti\u00E1n Pucheta", email: "usuario1@virtualmind.io" },
+    { nombre: "Micaela Raiter", email: "usuario2@virtualmind.io" },
+    { nombre: "Jean Pierre Sosa", email: "usuario3@virtualmind.io" },
+    { nombre: "Ezequiel Falabella", email: "usuario4@virtualmind.io" },
+    { nombre: "Gustavo Serrano", email: "usuario5@virtualmind.io" }
+];
+
+function getUserLocation(email, callback) {
+    $.ajax({
+        url: "https://hackaton-phi.herokuapp.com/usuarioUbicado/" + email,
+    }).done(function (d) {
+        console.log(d);
+
+        var accessPoint;
+        if (d && d.length > 0) {
+            var data = d[0];
+            accessPoint = data.fk_router;
+        }
+
+        callback(accessPoint);
+    });
+}
 
 autocomplete(document.getElementById("myInput"), employees);

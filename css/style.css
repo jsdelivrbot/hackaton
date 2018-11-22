@@ -99,9 +99,11 @@ body {
 .pull-right {
     float: right;
 }
+
 .clearfix {
     clear: both;
 }
+
 .hidden {
     display: none;
 }
@@ -162,9 +164,9 @@ body {
     margin: 10px;
 }
 
-.map-img {
-    max-width: 500px;
-}
+    .map-container .map-description {
+        margin-bottom: 10px;
+    }
 
 .home-page .logo {
     padding-left: 85px;
